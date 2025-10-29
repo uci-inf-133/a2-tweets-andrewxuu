@@ -1,3 +1,5 @@
+const distance_conversion = 1/1.609;
+
 class Tweet {
 	private text:string;
 	time:Date;
@@ -10,12 +12,26 @@ class Tweet {
 	//returns either 'live_event', 'achievement', 'completed_event', or 'miscellaneous'
     get source():string {
         //TODO: identify whether the source is a live event, an achievement, a completed event, or miscellaneous.
-        return "unknown";
+        const text = this.text.toLowerCase();
+
+        if(text.includes('just completed')||(text.includes('just posted'))){
+            return 'Completed events';
+        }
+        if(text.includes("live")){
+            return 'Live events';
+        }
+        if(text.includes('record')||text.includes('pb')||text.includes('personal')){
+            return 'Achievement';
+        }
+        return 'Miscellaneous';
     }
 
     //returns a boolean, whether the text includes any content written by the person tweeting.
     get written():boolean {
         //TODO: identify whether the tweet is written
+        if (this.writtenText.trim().length > 0){
+            return true;
+        }
         return false;
     }
 
@@ -32,6 +48,9 @@ class Tweet {
             return "unknown";
         }
         //TODO: parse the activity type from the text of the tweet
+
+        const match = this.text.match(/(\d+\.?\d*)\s*(mi|km)\s*([\w\s]+?)(?:\s+with RunKeeper|\s+#RunKeeper)/i);
+
         return "";
     }
 

@@ -14,13 +14,14 @@ class Tweet {
         //TODO: identify whether the source is a live event, an achievement, a completed event, or miscellaneous.
         const text = this.text.toLowerCase();
 
-        if(text.includes('just completed')||(text.includes('just posted'))){
+        if(text.includes('just completed a')||(text.includes('just posted a'))
+        || text.includes('i just completed an activity') || text.includes('completed a')){
             return 'Completed events';
         }
-        if(text.includes("live")){
+        if(text.includes("live")|| text.includes("#rklive")){
             return 'Live events';
         }
-        if(text.includes('record')||text.includes('pb')||text.includes('personal')){
+        if(text.includes('record')||text.includes('pb')||text.includes('personal')|| text.includes('achievement') || text.includes('set a goal')){
             return 'Achievement';
         }
         return 'Miscellaneous';
@@ -29,35 +30,38 @@ class Tweet {
     //returns a boolean, whether the text includes any content written by the person tweeting.
     get written():boolean {
         //TODO: identify whether the tweet is written
-        if (this.writtenText.trim().length > 0){
-            return true;
-        }
-        return false;
+        return this.writtenText.trim().length > 0;
     }
 
     get writtenText():string {
-        if(!this.written) {
-            return "";
+    //TODO: parse the written text from the tweet
+    
+        const text = this.text.trim();
+
+        const match = text.match(/(\bJust completed a|\bJust posted a|\bAchieved a new personal record|\bI just completed an activity)/i);
+
+        if (match && match.index !== undefined) {
+            const written = text.substring(0, match.index).trim();
+
+            const cleaned = written.replace(/https:\/\/t\.co\/\S+\s*#Runkeeper/i, '').trim();
+            if (cleaned.length > 0) {
+                return cleaned;
+            }
         }
-        //TODO: parse the written text from the tweet
+
+        if (this.source == 'Miscellaneous' && !text.includes('with @Runkeeper.')) {
+        return text;
+        }
+
         return "";
     }
 
     get activityType():string {
-        if (this.source != 'completed_event') {
-            return "unknown";
-        }
+        return this.source;
         //TODO: parse the activity type from the text of the tweet
-
-        const match = this.text.match(/(\d+\.?\d*)\s*(mi|km)\s*([\w\s]+?)(?:\s+with RunKeeper|\s+#RunKeeper)/i);
-
-        return "";
     }
 
     get distance():number {
-        if(this.source != 'completed_event') {
-            return 0;
-        }
         //TODO: prase the distance from the text of the tweet
         return 0;
     }

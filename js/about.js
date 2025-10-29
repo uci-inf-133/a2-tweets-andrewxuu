@@ -10,10 +10,17 @@ function parseTweets(runkeeper_tweets) {
 	});
 
 
+	const totalTweets = tweet_array.length;
+
+	const formatPercentage = (count) => {
+        const percentage = (count / totalTweets) * 100;
+        return math.format(percentage, { notation: 'fixed', precision: 2 }) + '%';
+    };
+
 
 	//This line modifies the DOM, searching for the tag with the numberTweets ID and updating the text.
 	//It works correctly, your task is to update the text of the other tags in the HTML file!
-	document.getElementById('numberTweets').innerText = tweet_array.length;
+	document.getElementById('numberTweets').innerText = totalTweets;
 
 //Tweet Dates
 
@@ -36,7 +43,8 @@ function parseTweets(runkeeper_tweets) {
         weekday: 'long',
         year: 'numeric',
         month: 'long',
-        day: 'numeric'
+        day: 'numeric',
+		timeZone: 'UTC'
 	};
 
 	const formattedEarliest = earliestDate.toLocaleDateString(undefined, dateOptions);
@@ -45,6 +53,67 @@ function parseTweets(runkeeper_tweets) {
 
     document.getElementById('firstDate').innerText = formattedEarliest;
     document.getElementById('lastDate').innerText = formattedLatest;
+
+
+
+//Category Counts
+
+	let completedCount = 0;
+    let liveEventCount = 0;
+    let achievementCount = 0;
+    let miscellaneousCount = 0;
+    let completedWithTextCount = 0;
+
+	for (const tweet of tweet_array) {
+        switch (tweet.source) {
+            case "Completed events":
+                completedCount++;
+                if (tweet.written) {
+                    completedWithTextCount++;
+                }
+                break;
+            case "Live events":
+                liveEventCount++;
+                break;
+            case "Achievement":
+                achievementCount++;
+                break;
+            case "Miscellaneous":
+            default:
+                miscellaneousCount++;
+                break;
+        }
+	}
+
+
+	// Completed Events
+    document.querySelector('.completedEvents').innerText = completedCount;
+    document.querySelector('.completedEventsPct').innerText = formatPercentage(completedCount);
+    document.querySelectorAll('.completedEvents').forEach(element => {
+        element.innerText = completedCount;
+    });
+
+    // Live Events
+    document.querySelector('.liveEvents').innerText = liveEventCount;
+    document.querySelector('.liveEventsPct').innerText = formatPercentage(liveEventCount);
+
+    // Achievements
+    document.querySelector('.achievements').innerText = achievementCount;
+    document.querySelector('.achievementsPct').innerText = formatPercentage(achievementCount);
+
+    // Miscellaneous
+    document.querySelector('.miscellaneous').innerText = miscellaneousCount;
+    document.querySelector('.miscellaneousPct').innerText = formatPercentage(miscellaneousCount);
+
+
+//User-written Tweets
+    // Calculate the percentage of completed events that included user-written text
+    const writtenPctValue = completedCount > 0 ? (completedWithTextCount / completedCount) * 100 : 0;
+    const writtenPct = math.format(writtenPctValue, { notation: 'fixed', precision: 2 }) + '%';
+
+    // Update the HTML spans
+    document.querySelector('.written').innerText = completedWithTextCount;
+    document.querySelector('.writtenPct').innerText = writtenPct;
 
 }
 

@@ -13,15 +13,13 @@ class Tweet {
     get source():string {
         //TODO: identify whether the source is a live event, an achievement, a completed event, or miscellaneous.
         const text = this.text.toLowerCase();
-
-        if(text.includes('just completed a')||(text.includes('just posted a'))
-        || text.includes('i just completed an activity') || text.includes('completed a')){
+        if(text.startsWith('just completed')||(text.startsWith('just posted'))){
             return 'Completed events';
         }
-        if(text.includes("live")|| text.includes("#rklive")){
+        if (text.startsWith('watch my')||text.includes("live")|| text.includes("#rklive")) {
             return 'Live events';
         }
-        if(text.includes('record')||text.includes('pb')||text.includes('personal')|| text.includes('achievement') || text.includes('set a goal')){
+        if(text.startsWith('achieved')||text.includes('record')||text.includes('personal')|| text.includes('achievement')){
             return 'Achievement';
         }
         return 'Miscellaneous';
@@ -35,7 +33,7 @@ class Tweet {
 
     get writtenText():string {
     //TODO: parse the written text from the tweet
-    
+
         const text = this.text.trim();
 
         const match = text.match(/(\bJust completed a|\bJust posted a|\bAchieved a new personal record|\bI just completed an activity)/i);

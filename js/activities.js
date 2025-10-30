@@ -4,7 +4,7 @@ function parseTweets(runkeeper_tweets) {
 		window.alert('No tweets returned');
 		return;
 	}
-	
+
 	tweet_array = runkeeper_tweets.map(function(tweet) {
 		return new Tweet(tweet.text, tweet.created_at);
 	});
@@ -12,11 +12,11 @@ function parseTweets(runkeeper_tweets) {
 	//TODO: create a new array or manipulate tweet_array to create a graph of the number of tweets containing each type of activity.
 
 	activity_vis_spec = {
-	  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-	  "description": "A graph of the number of Tweets containing each type of activity.",
-	  "data": {
-	    "values": tweet_array
-	  }
+	"$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+	"description": "A graph of the number of Tweets containing each type of activity.",
+	"data": {
+	"values": tweet_array
+	}
 	  //TODO: Add mark and encoding
 	};
 	vegaEmbed('#activityVis', activity_vis_spec, {actions:false});

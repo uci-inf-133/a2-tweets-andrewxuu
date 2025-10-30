@@ -2,10 +2,10 @@
 
 1. How many assignment points do you believe you completed (replace the *'s with your numbers)?
 
-*/10
-- */3 Summarizing tweets
-- */4 Identifying the most popular activities
-- */3 Adding a text each interface
+7/10
+- 2/3 Summarizing tweets
+- 2/4 Identifying the most popular activities
+- 3/3 Adding a text each interface
 
 2. How long, in hours, did it take you to complete this assignment?
 

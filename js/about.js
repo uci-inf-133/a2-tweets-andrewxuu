@@ -18,8 +18,6 @@ function parseTweets(runkeeper_tweets) {
     };
 
 
-	//This line modifies the DOM, searching for the tag with the numberTweets ID and updating the text.
-	//It works correctly, your task is to update the text of the other tags in the HTML file!
 	document.getElementById('numberTweets').innerText = totalTweets;
 
 //Tweet Dates
@@ -53,7 +51,6 @@ function parseTweets(runkeeper_tweets) {
 
     document.getElementById('firstDate').innerText = formattedEarliest;
     document.getElementById('lastDate').innerText = formattedLatest;
-
 
 
 //Category Counts
@@ -107,13 +104,13 @@ function parseTweets(runkeeper_tweets) {
 
 
 //User-written Tweets
-    // Calculate the percentage of completed events that included user-written text
-    const writtenPctValue = completedCount > 0 ? (completedWithTextCount / completedCount) * 100 : 0;
-    const writtenPct = math.format(writtenPctValue, { notation: 'fixed', precision: 2 }) + '%';
+    // Calculate the percentage
+    const writtenValue = completedCount > 0 ? (completedWithTextCount / completedCount) * 100 : 0;
+    const written = math.format(writtenValue, { notation: 'fixed', precision: 2 }) + '%';
 
     // Update the HTML spans
     document.querySelector('.written').innerText = completedWithTextCount;
-    document.querySelector('.writtenPct').innerText = writtenPct;
+    document.querySelector('.writtenPct').innerText = written;
 
 }
 

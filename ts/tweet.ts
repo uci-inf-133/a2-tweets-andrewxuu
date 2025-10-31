@@ -58,14 +58,21 @@ class Tweet {
 
         const text = this.text;
 
-        const regex = /\d+(\.\d+)?\s*(\bmi|\bkm|miles|kilometers)\s*(\w+)/i;
-        const match = text.match(regex);
+        const distanceBasedRegex = /a \d+(\.\d+)?\s*(\bmi\b|\bkm|miles|kilometers)\s*([\w\s]+?)\s+-/i;
+        let match = text.match(distanceBasedRegex);
 
         if (match && match[3]) {
-            // match[3] is the single word captured (e.g., 'run', 'bike', 'walk')
-            return match[3].toLowerCase();
+            return match[3].trim().toLowerCase();
         }
-        return this.source;
+
+        const durationBasedRegex = /posted a\s+([\w\s]+?)\s+in/i;
+        match = text.match(durationBasedRegex);
+
+        if (match && match[1]) {
+            return match[1].trim().toLowerCase();
+        }
+
+        return "";
     }
 
     get distance():number {
@@ -96,6 +103,19 @@ class Tweet {
 
     getHTMLTableRow(rowNumber:number):string {
         //TODO: return a table row which summarizes the tweet with a clickable link to the RunKeeper activity
-        return "<tr></tr>";
+        const urlRegex = /(https?:\/\/\S+)/gi;
+        const linkedText = this.text.replace(urlRegex, (url) => {
+            return `<a href="${url}" target="_blank">${url}</a>`;
+        });
+
+        const activity = this.activityType || this.source;
+
+        return `
+            <tr>
+                <td>${rowNumber}</td>
+                <td>${activity}</td>
+                <td>${linkedText}</td>
+            </tr>
+        `;
     }
 }

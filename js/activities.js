@@ -17,11 +17,11 @@ function parseTweets(runkeeper_tweets) {
         .filter(tweet => tweet.activityType && tweet.activityType.length > 0);
 
 	//TODO: create a new array or manipulate tweet_array to create a graph of the number of tweets containing each type of activity.
-
 	const activityData = tweet_array
-        .filter(tweet => tweet.activityType && tweet.activityType !== tweet.source) 
+        .filter(tweet => tweet.activityType && tweet.activityType.length > 0)
         .map(tweet => ({ activity: tweet.activityType }));
 
+	//A plot of how many of each type of activity exists in the dataset
 	activity_vis_spec = {
 	"$schema": "https://vega.github.io/schema/vega-lite/v5.json",
 	"description": "A graph of the number of Tweets containing each type of activity.",
@@ -69,6 +69,8 @@ function parseTweets(runkeeper_tweets) {
         .filter(d => d.distance_km > 0);
 
 	//TODO: create the visualizations which group the three most-tweeted activities by the day of the week.
+
+	//A plot of the distances by day of the week for all of the three most tweeted-about activities. 
 	const distance_vis_unaggregated = {
         "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
 		"description": "Unaggregated distances for top 3 activities by day of the week.",
@@ -97,10 +99,11 @@ function parseTweets(runkeeper_tweets) {
 				"type": "quantitative",
 				"title": "distance (km)"
 			},
-			"color": {"field": "activity", "type": "nominal", "title": "Activity"} // Keep color encoding
+			"color": {"field": "activity", "type": "nominal", "title": "Activity"} 
 		}
 	};
 
+	//A plot of the distances by day of the week for all of the three most tweeted-about activities, aggregating the activities by the mean.
     const distance_vis_aggregated = {
         "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
 		"description": "Average distances for top 3 activities by day of the week (Aggregated Mean).",
@@ -137,6 +140,8 @@ function parseTweets(runkeeper_tweets) {
     const distanceVisContainer = document.getElementById('distanceVis');
     const distanceVisAggregatedContainer = document.getElementById('distanceVisAggregated');
 
+
+	//button logic 
     vegaEmbed(distanceVisContainer, distance_vis_unaggregated, { actions: false });
     distanceVisAggregatedContainer.style.display = 'none';
 
@@ -158,6 +163,8 @@ function parseTweets(runkeeper_tweets) {
         }
     });
 
+
+	//text answers based off graph data
 	document.getElementById('numberActivities').innerText = Object.keys(activity_counts).length;
     document.getElementById('firstMost').innerText = top_activities[0] || 'N/A';
     document.getElementById('secondMost').innerText = top_activities[1] || 'N/A';
